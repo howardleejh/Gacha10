@@ -1,16 +1,16 @@
 import { Layout, Menu, Row, Col } from 'antd'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import GachaStores from './pages/GachaStores/GachaStores'
+import ShopsPage from './pages/ShopsPage/ShopsPage'
 import Marketplace from './pages/MarketPlace/MarketPlace'
 import LoginPage from './pages/LoginPage/LoginPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
 import HomePage from './pages/HomePage/HomePage'
 import ErrorPage from './pages/ErrorPage/ErrorPage'
-import Dashboard from './pages/Dashboard/Dashboard'
 import NftItem from './pages/NftItem/NftItem'
 import CreateShop from './pages/CreateShop/CreateShop'
-import CollectionsPage from './pages/CollectionsPage/CollectionsPage'
+import CollectionsPage from './pages/UserCollections/UserCollections'
 import CreateCollections from './pages/CreateCollections/CreateCollections'
+import UsersArea from './pages/UsersArea/UsersArea'
 import './App.scss'
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
               <Col span={8} offset={8}>
                 <Menu id='MenuBar' mode='horizontal'>
                   <Menu.Item key='one'>
-                    <Link to='/gacha/stores'>Shops</Link>
+                    <Link to='/gacha/shops'>Shops</Link>
                   </Menu.Item>
                   <Menu.Item key='two'>
                     <Link to='/gacha/marketplace'>Marketplace</Link>
@@ -59,6 +59,7 @@ function App() {
               style={{ padding: 24, minHeight: '100vh' }}
             >
               <Switch>
+                <Route exact path='/users' component={UsersArea}></Route>
                 <Route exact path='/nft/:id' component={NftItem}></Route>
                 <Route
                   exact
@@ -71,7 +72,6 @@ function App() {
                   component={CreateCollections}
                 ></Route>
                 <Route exact path='/create-shop' component={CreateShop}></Route>
-                <Route exact path='/dashboard' component={Dashboard}></Route>
                 <Route exact path='/login' component={LoginPage}></Route>
                 <Route exact path='/register' component={RegisterPage}></Route>
                 <Route
@@ -79,11 +79,7 @@ function App() {
                   path='/gacha/marketplace'
                   component={Marketplace}
                 ></Route>
-                <Route
-                  exact
-                  path='/gacha/stores'
-                  component={GachaStores}
-                ></Route>
+                <Route exact path='/gacha/shops' component={ShopsPage}></Route>
                 <Route exact path='/' component={HomePage}></Route>
                 <Route component={ErrorPage} />
               </Switch>

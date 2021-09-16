@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Row, Col, Form, Input, Button, Steps, message } from 'antd'
+import { useMoralis } from 'react-moralis'
 import './RegisterPage.scss'
 
 function RegisterPage() {
@@ -17,7 +18,7 @@ function RegisterPage() {
   const steps = [
     {
       title: 'First',
-      content: 'First-content',
+      content: 'some text',
     },
     {
       title: 'Second',
@@ -93,7 +94,7 @@ function RegisterPage() {
           <div className='steps-content'>{steps[current].content}</div>
           <div className='steps-action'>
             {current < steps.length - 1 && (
-              <Button type='primary' onClick={() => next()}>
+              <Button type='primary' disabled={true} onClick={() => next()}>
                 Next
               </Button>
             )}
