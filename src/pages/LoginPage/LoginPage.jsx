@@ -1,16 +1,40 @@
 import { Row, Col, Form, Input, Button } from 'antd'
-import { useState } from 'react'
+import { useContext, useEffect } from 'react'
+import { AuthContext } from '../../components/AuthProvider/AuthProvider'
+import { toast } from 'react-toastify'
+import { Link, useHistory } from 'react-router-dom'
 import './LoginPage.scss'
 
 function LoginPage() {
-  const [userName, setUserName] = useState('')
-  const [password, setPassword] = useState('')
+  let history = useHistory()
+
+  const auth = useContext(AuthContext)
+  const user = auth.user
 
   const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
+    wrapperCol: { offset: 12, span: 8 },
   }
 
   const [form] = Form.useForm()
+
+  const notify = (message) => toast.dark(message)
+
+  async function OnFinish(values) {
+    const userDetails = {
+      email: values.email.trim(),
+      password: values.password.trim(),
+    }
+    try {
+      const loggedIn = await auth.login(userDetails.email, userDetails.password)
+    } catch (err) {
+      return notify('Unable to log in, please try again')
+    }
+    history.push('/dashboard')
+  }
+
+  useEffect(() => {
+    auth.userCheck()
+  }, [user])
 
   return (
     <>
@@ -23,19 +47,14 @@ function LoginPage() {
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
             initialValues={{ remember: true }}
-            onFinish={() => console.log('finished')}
+            onFinish={OnFinish}
           >
             <Form.Item
-              label='Username'
-              name='username'
-              rules={[
-                { required: true, message: 'Please input your username!' },
-              ]}
+              label='Email'
+              name='email'
+              rules={[{ required: true, message: 'Please input your email!' }]}
             >
-              <Input
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
+              <Input />
             </Form.Item>
             <Form.Item
               label='Password'
@@ -44,20 +63,14 @@ function LoginPage() {
                 { required: true, message: 'Please input your password!' },
               ]}
             >
-              <Input.Password
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <Input.Password />
             </Form.Item>
             <Form.Item id='form-buttons' {...tailLayout}>
               <Button type='primary' htmlType='submit'>
                 Login
               </Button>
-              <Button
-                htmlType='button'
-                onClick={() => console.log('go back to previous page')}
-              >
-                Cancel
+              <Button htmlType='button'>
+                <Link to={'/'}> Cancel </Link>
               </Button>
             </Form.Item>
           </Form>

@@ -1,11 +1,10 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Layout, Menu } from 'antd'
 import {
   AppstoreOutlined,
   BarChartOutlined,
   CloudOutlined,
-  ShopOutlined,
-  TeamOutlined,
   UserOutlined,
   UploadOutlined,
   VideoCameraOutlined,
@@ -19,36 +18,45 @@ function SideBar() {
     <Sider
       style={{
         overflow: 'auto',
-        height: '50vh',
+        height: '45vh',
         position: 'fixed',
         left: 0,
       }}
     >
       <div className='logo' />
-      <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
-        <Menu.Item key='1' icon={<UserOutlined />}>
-          <Link to='/dashboard'>Dashboard</Link>
+      <Menu theme='dark' mode='vertical' style={{ paddingTop: '4vh' }}>
+        <Menu.Item key='/dashboard' icon={<UserOutlined />}>
+          <Link to='/dashboard'>
+            <span>Dashboard</span>
+          </Link>
         </Menu.Item>
-        <Menu.Item key='2' icon={<VideoCameraOutlined />}>
-          <Link to='/stores'>Stores</Link>
+        <Menu.Item key='/create' icon={<UserOutlined />}>
+          <Link to='/create'>
+            <span>Create</span>
+          </Link>
         </Menu.Item>
-        <Menu.Item key='3' icon={<UploadOutlined />}>
-          <Link to='/collections'>Collections</Link>
+        <Menu.Item key='/stores' icon={<VideoCameraOutlined />}>
+          <Link to='/stores'>
+            <span>Stores</span>
+          </Link>
         </Menu.Item>
-        <Menu.Item key='4' icon={<BarChartOutlined />}>
-          <Link to='/assets'>Assets</Link>
+        <Menu.Item key='/collections' icon={<UploadOutlined />}>
+          <Link to='/collections'>
+            <span>Collections</span>
+          </Link>
         </Menu.Item>
-        <Menu.Item key='5' icon={<CloudOutlined />}>
-          <Link to='/faucet'>Top Up</Link>
+        <Menu.Item key='/assets' icon={<BarChartOutlined />}>
+          <Link to='/assets'>
+            <span>Assets</span>
+          </Link>
         </Menu.Item>
-        <Menu.Item key='6' icon={<AppstoreOutlined />}>
+        <Menu.Item key='/faucet' icon={<CloudOutlined />}>
+          <Link to='/faucet'>
+            <span>Top Up</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key='/settings' icon={<AppstoreOutlined />}>
           Settings
-        </Menu.Item>
-        <Menu.Item key='7' icon={<TeamOutlined />}>
-          nav 7
-        </Menu.Item>
-        <Menu.Item key='8' icon={<ShopOutlined />}>
-          nav 8
         </Menu.Item>
       </Menu>
     </Sider>

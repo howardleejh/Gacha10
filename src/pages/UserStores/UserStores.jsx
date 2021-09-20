@@ -1,13 +1,20 @@
-import { Link } from 'react-router-dom'
+import SideBar from '../../components/SideBar/SideBar'
+import { Layout } from 'antd'
 import './UserStores.scss'
 
 function UserStores() {
+  const { Content } = Layout
+
   return (
     <>
-      <h1>this is a user stores page</h1>
-      <button>
-        <Link to='/stores/create-new-store'>Create New Store</Link>
-      </button>
+      <Layout>
+        <SideBar />
+        <Layout className='site-layout' style={{ marginLeft: 200 }}>
+          <Content style={{ overflow: 'initial' }}>
+            <h1>this is a user stores page</h1>
+          </Content>
+        </Layout>
+      </Layout>
     </>
   )
 }
