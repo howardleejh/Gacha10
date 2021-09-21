@@ -1,4 +1,4 @@
-import { Row, Col, Layout } from 'antd'
+import { Row, Col, Layout, Divider, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import SideBar from '../../components/SideBar/SideBar'
 import './CreatePage.scss'
@@ -12,19 +12,20 @@ function CreatePage() {
         <SideBar />
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content style={{ overflow: 'initial' }}>
-            <Row gutter={[16, 16]} align='center'>
-              <Col span={8}>
+            <Divider orientation='left'>Create</Divider>
+            <Row gutter={[24, 12]}>
+              <Col span={8} offset={3}>
                 <div className='space-align-container'>
-                  <button>
+                  <Button type='primary'>
                     <Link to='/create/store'>Create New Store</Link>
-                  </button>
+                  </Button>
                 </div>
               </Col>
               <Col span={8}>
                 <div className='space-align-container'>
-                  <button>
+                  <Button type='primary'>
                     <Link to='/create/collection'>Create New Collection</Link>
-                  </button>
+                  </Button>
                 </div>
               </Col>
             </Row>

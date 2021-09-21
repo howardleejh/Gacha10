@@ -1,4 +1,4 @@
-import { Row, Col, Form, Input, Button } from 'antd'
+import { Row, Col, Form, Input, Button, Divider, Space } from 'antd'
 import { useContext, useEffect } from 'react'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
 import { useHistory } from 'react-router-dom'
@@ -11,10 +11,6 @@ function LoginPage() {
 
   const auth = useContext(AuthContext)
   const user = auth.user
-
-  const tailLayout = {
-    wrapperCol: { offset: 12, span: 8 },
-  }
 
   const [form] = Form.useForm()
 
@@ -36,16 +32,17 @@ function LoginPage() {
   useEffect(() => {
     auth.userCheck()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [])
 
   return (
     <>
       <Row justify='center'>
         <Col span={16}>
+          <Divider orientation='left'>Log In</Divider>
           <Form
             form={form}
-            id='register-form'
-            name='registerForm'
+            id='login-form'
+            name='loginForm'
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 8 }}
             initialValues={{ remember: true }}
@@ -67,13 +64,15 @@ function LoginPage() {
             >
               <Input.Password />
             </Form.Item>
-            <Form.Item id='form-buttons' {...tailLayout}>
-              <Button type='primary' htmlType='submit'>
-                Login
-              </Button>
-              <Button htmlType='button'>
-                <Link to={'/'}> Cancel </Link>
-              </Button>
+            <Form.Item align='center'>
+              <Space>
+                <Button type='primary' htmlType='submit'>
+                  Login
+                </Button>
+                <Button>
+                  <Link to={'/'}> Go Back </Link>
+                </Button>
+              </Space>
             </Form.Item>
           </Form>
         </Col>

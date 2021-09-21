@@ -11,7 +11,6 @@ import RegisterPage from './pages/RegisterPage/RegisterPage'
 import HomePage from './pages/HomePage/HomePage'
 import ErrorPage from './pages/ErrorPage/ErrorPage'
 import NftItem from './pages/NftItem/NftItem'
-import CollectionsPage from './pages/UserCollections/UserCollections'
 import UserDashboard from './pages/UserDashboard/UserDashboard'
 import UserCollections from './pages/UserCollections/UserCollections'
 import UserStores from './pages/UserStores/UserStores'
@@ -19,6 +18,7 @@ import UserAssets from './pages/UserAssets/UserAssets'
 import CreatePage from './pages/CreatePage/CreatePage'
 import CreateCollection from './pages/CreateCollection/CreateCollection'
 import CreateStore from './pages/CreateStore/CreateStore'
+import CollectionItem from './pages/CollectionItem/CollectionItem'
 import './App.scss'
 
 function App() {
@@ -39,6 +39,11 @@ function App() {
                 style={{ padding: 24, minHeight: '87vh' }}
               >
                 <Switch>
+                  <PrivateRoute
+                    exact
+                    path='/collections/:collectionName'
+                    component={CollectionItem}
+                  ></PrivateRoute>
                   <PrivateRoute
                     exact
                     path='/create/store'
@@ -75,21 +80,16 @@ function App() {
                     component={UserDashboard}
                   ></PrivateRoute>
                   <Route exact path='/nft/:id' component={NftItem}></Route>
-                  <Route
-                    exact
-                    path='/collections'
-                    component={CollectionsPage}
-                  ></Route>
                   <GuestOnlyRoute
                     exact
                     path='/login'
                     component={LoginPage}
                   ></GuestOnlyRoute>
-                  <GuestOnlyRoute
+                  <Route
                     exact
                     path='/register'
                     component={RegisterPage}
-                  ></GuestOnlyRoute>
+                  ></Route>
                   <Route
                     exact
                     path='/gacha/marketplace'

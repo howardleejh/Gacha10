@@ -9,7 +9,7 @@ function CardItem(props) {
       <Card
         hoverable
         style={{ width: props.width }}
-        cover={<img alt='example' src={props.imgUrl} />}
+        cover={<img alt={props.alt} src={props.imgUrl} />}
       >
         <Meta title={props.title} description={props.desc} />
         <div style={{ marginTop: '3vh' }}>

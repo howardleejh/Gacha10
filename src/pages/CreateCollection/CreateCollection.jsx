@@ -103,6 +103,7 @@ function CreateCollection() {
         collectionImg: {
           url: collectionImg,
         },
+        collectionSlug: collectionName.trim().split(' ').join('-'),
       })
     } catch (err) {
       console.log(err)

@@ -1,7 +1,17 @@
 import React, { useContext } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import SideBar from '../../components/SideBar/SideBar'
-import { Layout, Statistic, Row, Col, Button, Popover, Card, Table } from 'antd'
+import {
+  Layout,
+  Statistic,
+  Row,
+  Col,
+  Button,
+  Popover,
+  Card,
+  Table,
+  Divider,
+} from 'antd'
 import { Pie, Column } from '@ant-design/charts'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
 import './UserDashboard.scss'
@@ -155,6 +165,7 @@ function UserDashboard() {
         <SideBar />
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content>
+            <Divider orientation='left'>Dashboard</Divider>
             <ResponsiveGridLayout
               className='dndLayout'
               isResizable={true}
@@ -226,17 +237,17 @@ function UserDashboard() {
               <div
                 className='testbox'
                 key='4'
-                data-grid={{ x: 0, y: 2, w: 12, h: 4 }}
+                data-grid={{ x: 0, y: 2, w: 12, h: 3 }}
               >
                 <Card title='Transactions' bordered={false}>
                   <Table
                     columns={columns}
                     dataSource={data}
-                    scroll={{ y: 400 }}
+                    scroll={{ y: 250 }}
                     pagination={false}
                   />
                 </Card>
-                <h1 style={{ float: 'right', padding: '0 2vw 0 0' }}>
+                <h1 style={{ float: 'right', padding: '1vw' }}>
                   Total Transactions: <span>{data.length}</span>
                 </h1>
               </div>

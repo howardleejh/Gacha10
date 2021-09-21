@@ -34,7 +34,7 @@ export default function AuthProvider({ children }) {
       userAuth = await Moralis.authenticate()
     } catch (err) {
       setUser(null)
-      console.log(err)
+      notify('Please try to authenticate again')
       return
     }
     setUser(userAuth.attributes)

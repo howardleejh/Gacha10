@@ -89,16 +89,16 @@ function RegisterPage() {
 
   useEffect(() => {
     auth.userCheck()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [])
 
   return (
     <>
       <Row justify='center'>
         <Col span={16}>
+          <Divider orientation='left'>Registration</Divider>
           <Steps direction='vertical' current={activePanel - 1}>
             <Step
-              title='INSTALL METAMASK'
+              title='Install Metamask'
               description={
                 <Collapse accordion ghost activeKey={activePanel}>
                   <Panel showArrow={false} key='1'>
