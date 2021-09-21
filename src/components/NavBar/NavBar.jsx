@@ -22,10 +22,14 @@ function NavBar() {
         <Col span={6}>
           <Link to='/'>Logo</Link>
         </Col>
-        <Col span={9} offset={8}>
+        <Col span={8} offset={8}>
           <Menu id='MenuBar' mode='horizontal'>
-            <Menu.Item key='welcome' disabled={true}>
-              {user ? <span> Welcome {user.username}</span> : <></>}
+            <Menu.Item key='welcome'>
+              {user ? (
+                <Link to='/dashboard'>Welcome {user.username}</Link>
+              ) : (
+                <></>
+              )}
             </Menu.Item>
             <Menu.Item key='shops'>
               <Link to='/gacha/shops'>Shops</Link>
@@ -44,9 +48,6 @@ function NavBar() {
               </>
             ) : (
               <>
-                <Menu.Item key='dashboard'>
-                  <Link to='/dashboard'>Dashboard</Link>
-                </Menu.Item>
                 <Menu.Item key='logout' style={{ padding: '0' }}>
                   <Button type='link' onClick={auth.logout}>
                     Log Out
