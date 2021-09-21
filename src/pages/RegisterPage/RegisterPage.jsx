@@ -89,6 +89,7 @@ function RegisterPage() {
 
   useEffect(() => {
     auth.userCheck()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   return (

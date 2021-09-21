@@ -1,8 +1,9 @@
 import { Row, Col, Form, Input, Button } from 'antd'
 import { useContext, useEffect } from 'react'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
+import { useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import './LoginPage.scss'
 
 function LoginPage() {
@@ -25,7 +26,7 @@ function LoginPage() {
       password: values.password.trim(),
     }
     try {
-      const loggedIn = await auth.login(userDetails.email, userDetails.password)
+      await auth.login(userDetails.email, userDetails.password)
     } catch (err) {
       return notify('Unable to log in, please try again')
     }
@@ -34,6 +35,7 @@ function LoginPage() {
 
   useEffect(() => {
     auth.userCheck()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   return (

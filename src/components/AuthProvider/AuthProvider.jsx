@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from 'react'
+import { useState, createContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { toast } from 'react-toastify'
 
@@ -54,14 +54,13 @@ export default function AuthProvider({ children }) {
   }
 
   const logout = async () => {
-    let user = Moralis.User.current()
-
     try {
-      user = await Moralis.User.logOut()
+      await Moralis.User.logOut()
     } catch (err) {
       return console.log(err)
     }
-    console.log('something')
+    setUser(null)
+    return
   }
 
   return (

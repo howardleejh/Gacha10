@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Layout, Menu, Row, Col } from 'antd'
+import { Layout, Menu, Row, Col, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../AuthProvider/AuthProvider'
 
@@ -22,20 +22,38 @@ function NavBar() {
         <Col span={6}>
           <Link to='/'>Logo</Link>
         </Col>
-        <Col span={8} offset={8}>
+        <Col span={9} offset={8}>
           <Menu id='MenuBar' mode='horizontal'>
-            <Menu.Item key='one'>
+            <Menu.Item key='welcome' disabled={true}>
+              {user ? <span> Welcome {user.username}</span> : <></>}
+            </Menu.Item>
+            <Menu.Item key='shops'>
               <Link to='/gacha/shops'>Shops</Link>
             </Menu.Item>
-            <Menu.Item key='two'>
+            <Menu.Item key='marketplace'>
               <Link to='/gacha/marketplace'>Marketplace</Link>
             </Menu.Item>
-            <Menu.Item key='three'>
-              <Link to='/register'>Register</Link>
-            </Menu.Item>
-            <Menu.Item key='four'>
-              <Link to='/login'>Login</Link>
-            </Menu.Item>
+            {!user ? (
+              <>
+                <Menu.Item key='register'>
+                  <Link to='/register'>Register</Link>
+                </Menu.Item>
+                <Menu.Item key='login'>
+                  <Link to='/login'>Login</Link>
+                </Menu.Item>
+              </>
+            ) : (
+              <>
+                <Menu.Item key='dashboard'>
+                  <Link to='/dashboard'>Dashboard</Link>
+                </Menu.Item>
+                <Menu.Item key='logout' style={{ padding: '0' }}>
+                  <Button type='link' onClick={auth.logout}>
+                    Log Out
+                  </Button>
+                </Menu.Item>
+              </>
+            )}
           </Menu>
         </Col>
       </Row>
