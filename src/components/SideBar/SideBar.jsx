@@ -44,9 +44,9 @@ function SideBar() {
             <span>Collections</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key='/assets' icon={<BarChartOutlined />}>
-          <Link to='/assets'>
-            <span>Assets</span>
+        <Menu.Item key='/uploads' icon={<BarChartOutlined />}>
+          <Link to='/uploads'>
+            <span>Uploads</span>
           </Link>
         </Menu.Item>
         <Menu.Item key='/faucet' icon={<CloudOutlined />}>

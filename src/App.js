@@ -14,7 +14,7 @@ import NftItem from './pages/NftItem/NftItem'
 import UserDashboard from './pages/UserDashboard/UserDashboard'
 import UserCollections from './pages/UserCollections/UserCollections'
 import UserStores from './pages/UserStores/UserStores'
-import UserAssets from './pages/UserAssets/UserAssets'
+import UserUploads from './pages/UserUploads/UserUploads'
 import CreatePage from './pages/CreatePage/CreatePage'
 import CreateCollection from './pages/CreateCollection/CreateCollection'
 import CreateStore from './pages/CreateStore/CreateStore'
@@ -61,8 +61,8 @@ function App() {
                   ></PrivateRoute>
                   <PrivateRoute
                     exact
-                    path='/assets'
-                    component={UserAssets}
+                    path='/uploads'
+                    component={UserUploads}
                   ></PrivateRoute>
                   <PrivateRoute
                     exact
