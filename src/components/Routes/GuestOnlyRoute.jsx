@@ -9,7 +9,11 @@ const GuestOnlyRoute = ({ component: Component, ...otherProps }) => {
     <Route
       {...otherProps}
       render={(props) =>
-        user ? <Redirect to='/dashboard' /> : <Component {...props} />
+        user && user.email ? (
+          <Redirect to='/dashboard' />
+        ) : (
+          <Component {...props} />
+        )
       }
     />
   )
