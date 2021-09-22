@@ -18,8 +18,8 @@ function LoginPage() {
   const notify = (message) => toast.dark(message)
 
   useEffect(() => {
-    auth.userCheck()
-  })
+    localStorage.clear()
+  }, [])
 
   async function OnFinish(values) {
     const userDetails = {

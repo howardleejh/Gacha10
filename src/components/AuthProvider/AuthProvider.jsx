@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from 'react'
+import { useState, createContext } from 'react'
 import { useMoralis } from 'react-moralis'
 import { toast } from 'react-toastify'
 
@@ -61,6 +61,7 @@ export default function AuthProvider({ children }) {
       notify('Please check your Metamask credentials')
       return
     }
+    setMetaUser(metaAuth.attributes)
 
     let userAuth = null
     try {
@@ -68,13 +69,16 @@ export default function AuthProvider({ children }) {
     } catch (err) {
       return console.log(err)
     }
+    if (metaAuth.attributes.ethAddress !== userAuth.attributes.ethAddress) {
+      return notify('Your Metamask account and user account does not match')
+    }
+
     if (!userAuth) {
       notify('Please check your login credentials')
       return
     }
     setUser(userAuth.attributes)
 
-    setMetaUser(metaAuth.attributes)
     setIsLoading(false)
     return
   }

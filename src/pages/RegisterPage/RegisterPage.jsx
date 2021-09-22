@@ -49,8 +49,8 @@ function RegisterPage() {
     } catch (err) {
       return console.log(err)
     }
-
-    history.push('/dashboard')
+    localStorage.clear()
+    history.push('/login')
     return
   }
 
@@ -81,7 +81,7 @@ function RegisterPage() {
   }
 
   useEffect(() => {
-    auth.userCheck()
+    localStorage.clear()
   }, [])
 
   return (
