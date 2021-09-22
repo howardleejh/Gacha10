@@ -19,6 +19,7 @@ import CreatePage from './pages/CreatePage/CreatePage'
 import CreateCollection from './pages/CreateCollection/CreateCollection'
 import CreateStore from './pages/CreateStore/CreateStore'
 import CollectionItem from './pages/CollectionItem/CollectionItem'
+import UserTransfers from './pages/UserTransfers/UserTransfers'
 import './App.scss'
 
 function App() {
@@ -39,6 +40,11 @@ function App() {
                 style={{ padding: 24, minHeight: '87vh' }}
               >
                 <Switch>
+                  <PrivateRoute
+                    exact
+                    path='/transfer'
+                    component={UserTransfers}
+                  ></PrivateRoute>
                   <PrivateRoute
                     exact
                     path='/collections/:collectionName'
@@ -85,11 +91,11 @@ function App() {
                     path='/login'
                     component={LoginPage}
                   ></GuestOnlyRoute>
-                  <Route
+                  <GuestOnlyRoute
                     exact
                     path='/register'
                     component={RegisterPage}
-                  ></Route>
+                  ></GuestOnlyRoute>
                   <Route
                     exact
                     path='/gacha/marketplace'

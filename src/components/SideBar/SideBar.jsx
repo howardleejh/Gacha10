@@ -49,9 +49,9 @@ function SideBar() {
             <span>Uploads</span>
           </Link>
         </Menu.Item>
-        <Menu.Item key='/faucet' icon={<CloudOutlined />}>
-          <Link to='/faucet'>
-            <span>Top Up</span>
+        <Menu.Item key='/transfer' icon={<CloudOutlined />}>
+          <Link to='/transfer'>
+            <span>Transfer</span>
           </Link>
         </Menu.Item>
         <Menu.Item key='/settings' icon={<AppstoreOutlined />}>

@@ -1,4 +1,4 @@
-import { useState, createContext } from 'react'
+import { useState, createContext, useEffect } from 'react'
 import { useMoralis } from 'react-moralis'
 import { toast } from 'react-toastify'
 
@@ -19,59 +19,62 @@ export default function AuthProvider({ children }) {
     try {
       isUser = await Moralis.User.current()
     } catch (err) {
-      console.log(err)
-      return false
+      return console.error(err)
     }
     if (isUser) {
       setUser(isUser.attributes)
-      console.log('is user')
       return true
     }
     setUser(null)
-    console.log('is not user')
     return false
   }
 
-  const metamaskAuth = async () => {
-    setIsLoading(true)
-    let metaUserAuth = null
-
+  const metaCheck = async () => {
+    let isMetaUser = null
     try {
-      metaUserAuth = await Moralis.authenticate()
+      isMetaUser = await Moralis.authenticate({
+        signingMessage: 'Welcome to Gacha10',
+      })
     } catch (err) {
-      console.log(err)
+      return console.error(err)
     }
-    if (!metaUserAuth) {
-      setMetaUser(null)
-      setUser(null)
-      notify('Please try again')
-      return
+    if (isMetaUser) {
+      setMetaUser(isMetaUser.attributes)
+      return true
     }
-    setMetaUser(metaUserAuth.attributes)
-    setIsLoading(false)
-    return metaUserAuth.attributes
+    setMetaUser(null)
+    return false
   }
 
   const login = async (email, password) => {
     setIsLoading(true)
 
+    let metaAuth = null
+
+    try {
+      metaAuth = await Moralis.authenticate()
+    } catch (err) {
+      return console.log(err)
+    }
+
+    if (!metaAuth) {
+      notify('Please check your Metamask credentials')
+      return
+    }
+
     let userAuth = null
     try {
       userAuth = await Moralis.User.logIn(email, password)
     } catch (err) {
-      notify('Please check your login credentials')
-      return false
+      return console.log(err)
     }
-    let metaUser = await metamaskAuth()
-
-    if (userAuth.attributes.ethAddress !== metaUser.ethAddress) {
-      logout()
-      setUser(null)
-      setMetaUser(null)
-      return notify('Your account and Metamask does not match')
+    if (!userAuth) {
+      notify('Please check your login credentials')
+      return
     }
     setUser(userAuth.attributes)
-    setMetaUser(metaUser)
+
+    setMetaUser(metaAuth.attributes)
     setIsLoading(false)
     return
   }
@@ -91,7 +94,7 @@ export default function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         userCheck,
-        metamaskAuth,
+        metaCheck,
         login,
         logout,
         user,

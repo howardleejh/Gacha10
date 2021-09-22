@@ -38,7 +38,7 @@ function NavBar() {
             <Menu.Item key='marketplace'>
               <Link to='/gacha/marketplace'>Marketplace</Link>
             </Menu.Item>
-            {!user && !metaUser ? (
+            {!user ? (
               <>
                 <Menu.Item key='register'>
                   <Link to='/register'>Register</Link>

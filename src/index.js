@@ -12,8 +12,8 @@ ReactDOM.render(
   <CookiesProvider>
     <React.StrictMode>
       <MoralisProvider
-        appId='iTlBEgjbRVF5naFrm4X38bflVRfawttAMNaIriwc'
-        serverUrl='https://dbrbjwyoat0c.bigmoralis.com:2053/server'
+        appId='MCS19nYgDdfO126NoIdPlfTneItstjhblGvCs5qp'
+        serverUrl='https://3s2m9pj4axpg.grandmoralis.com:2053/server'
       >
         <ToastContainer
           position='bottom-right'

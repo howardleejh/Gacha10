@@ -11,10 +11,15 @@ function LoginPage() {
 
   const auth = useContext(AuthContext)
   const user = auth.user
+  const metaUser = auth.metaUser
 
   const [form] = Form.useForm()
 
   const notify = (message) => toast.dark(message)
+
+  useEffect(() => {
+    auth.userCheck()
+  })
 
   async function OnFinish(values) {
     const userDetails = {
@@ -30,11 +35,6 @@ function LoginPage() {
     history.push('/dashboard')
     return
   }
-
-  useEffect(() => {
-    auth.userCheck()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <>
