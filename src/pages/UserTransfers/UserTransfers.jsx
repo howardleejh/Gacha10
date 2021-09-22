@@ -15,7 +15,7 @@ import {
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
 import { useMoralis } from 'react-moralis'
-import { toast } from 'react-toastify'
+import { useHistory } from 'react-router-dom'
 import './UserTransfers.scss'
 
 function UserTransfers() {
@@ -24,9 +24,8 @@ function UserTransfers() {
   const { Meta } = Card
   const auth = useContext(AuthContext)
   const user = auth.user
-  const metaUser = auth.metaUser
   const [form] = Form.useForm()
-  const notify = (message) => toast.dark(message)
+  let history = useHistory()
 
   const [userBalance, setUserBalance] = useState(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -34,6 +33,8 @@ function UserTransfers() {
   const [isLoading, setIsLoading] = useState(false)
 
   const findBalance = async () => {
+    setIsLoading(true)
+
     let balance = null
 
     const options = {
@@ -50,6 +51,7 @@ function UserTransfers() {
     let balanceAmt = parseFloat(balance.balance / Math.pow(10, 18)).toFixed(2)
 
     setUserBalance(balanceAmt)
+    setIsLoading(false)
     return
   }
 
@@ -108,13 +110,18 @@ function UserTransfers() {
                       <>
                         <Row gutter={16}>
                           <Col span={12}>
-                            <Statistic title='Username' value={user.username} />
+                            <Statistic
+                              title='Username'
+                              value={user.username}
+                              loading={isLoading}
+                            />
                           </Col>
                           <Col span={12}>
                             <Statistic
                               title='Account Balance (ETH)'
                               value={userBalance}
                               precision={2}
+                              loading={isLoading}
                             />
                           </Col>
                         </Row>
@@ -122,6 +129,7 @@ function UserTransfers() {
                           content={user.ethAddress}
                           trigger='hover'
                           placement='bottom'
+                          loading={isLoading}
                         >
                           <Button style={{ marginTop: '1vh' }}>Wallet</Button>
                         </Popover>
@@ -176,7 +184,11 @@ function UserTransfers() {
                                 >
                                   Confirm
                                 </Button>
-                                <Button type='default' loading={isLoading}>
+                                <Button
+                                  type='default'
+                                  loading={isLoading}
+                                  onClick={() => history.goBack()}
+                                >
                                   Cancel
                                 </Button>
                               </Form.Item>
@@ -186,7 +198,7 @@ function UserTransfers() {
                             <>
                               <p>
                                 Please select the right Metamask Account before
-                                Transaction.
+                                transaction.
                               </p>
                             </>
                           </Col>

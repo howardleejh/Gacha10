@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import SideBar from '../../components/SideBar/SideBar'
 import {
@@ -11,6 +11,7 @@ import {
   Card,
   Table,
   Divider,
+  Skeleton,
 } from 'antd'
 import { Pie, Column } from '@ant-design/charts'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
@@ -20,6 +21,8 @@ function UserDashboard() {
   const auth = useContext(AuthContext)
 
   const user = auth.user
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const ResponsiveGridLayout = WidthProvider(Responsive)
   const { Content } = Layout
@@ -164,92 +167,94 @@ function UserDashboard() {
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content>
             <Divider orientation='left'>Dashboard</Divider>
-            <ResponsiveGridLayout
-              className='dndLayout'
-              isResizable={true}
-              useCSSTransforms={true}
-              breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-              cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 1 }}
-              rowHeight={150}
-              containerPadding={{
-                lg: [20, 20],
-                md: [20, 20],
-                sm: [20, 20],
-                xs: [20, 20],
-                xxs: [20, 20],
-              }}
-            >
-              <div
-                className='testbox'
-                key='1'
-                data-grid={{
-                  x: 0,
-                  y: 0,
-                  w: 4,
-                  h: 2,
+            <Skeleton active loading={isLoading}>
+              <ResponsiveGridLayout
+                className='dndLayout'
+                isResizable={true}
+                useCSSTransforms={true}
+                breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+                cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 1 }}
+                rowHeight={150}
+                containerPadding={{
+                  lg: [20, 20],
+                  md: [20, 20],
+                  sm: [20, 20],
+                  xs: [20, 20],
+                  xxs: [20, 20],
                 }}
               >
-                <Card title='USER DETAILS' bordered={false}>
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Statistic title='Username' value={user.username} />
-                    </Col>
-                    <Col span={12}>
-                      <Statistic
-                        title='Account Balance (Eth)'
-                        value={112893}
-                        precision={2}
-                      />
-                    </Col>
-                  </Row>
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Statistic title='Colections' value={112893} />
-                    </Col>
-                    <Col span={12}>
-                      <Statistic title='Stores' value={112893} />
-                    </Col>
-                  </Row>
-                  <Popover content={user.ethAddress} trigger='hover'>
-                    <Button style={{ marginTop: '3vh', float: 'right' }}>
-                      Wallet
-                    </Button>
-                  </Popover>
-                </Card>
-              </div>
-              <div
-                className='testbox'
-                key='2'
-                data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
-                style={{ padding: '2vh 4vw 0 0' }}
-              >
-                <StoreProfits />
-              </div>
-              <div
-                className='testbox'
-                key='3'
-                data-grid={{ x: 8, y: 0, w: 4, h: 2 }}
-              >
-                <FavoriteCollection />
-              </div>
-              <div
-                className='testbox'
-                key='4'
-                data-grid={{ x: 0, y: 2, w: 12, h: 3 }}
-              >
-                <Card title='Transactions' bordered={false}>
-                  <Table
-                    columns={columns}
-                    dataSource={data}
-                    scroll={{ y: 250 }}
-                    pagination={false}
-                  />
-                </Card>
-                <h1 style={{ float: 'right', padding: '1vw' }}>
-                  Total Transactions: <span>{data.length}</span>
-                </h1>
-              </div>
-            </ResponsiveGridLayout>
+                <div
+                  className='testbox'
+                  key='1'
+                  data-grid={{
+                    x: 0,
+                    y: 0,
+                    w: 4,
+                    h: 2,
+                  }}
+                >
+                  <Card title='USER DETAILS' bordered={false}>
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Statistic title='Username' value={user.username} />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic
+                          title='Account Balance (Eth)'
+                          value={112893}
+                          precision={2}
+                        />
+                      </Col>
+                    </Row>
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Statistic title='Colections' value={112893} />
+                      </Col>
+                      <Col span={12}>
+                        <Statistic title='Stores' value={112893} />
+                      </Col>
+                    </Row>
+                    <Popover content={user.ethAddress} trigger='hover'>
+                      <Button style={{ marginTop: '3vh', float: 'right' }}>
+                        Wallet
+                      </Button>
+                    </Popover>
+                  </Card>
+                </div>
+                <div
+                  className='testbox'
+                  key='2'
+                  data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
+                  style={{ padding: '2vh 4vw 0 0' }}
+                >
+                  <StoreProfits />
+                </div>
+                <div
+                  className='testbox'
+                  key='3'
+                  data-grid={{ x: 8, y: 0, w: 4, h: 2 }}
+                >
+                  <FavoriteCollection />
+                </div>
+                <div
+                  className='testbox'
+                  key='4'
+                  data-grid={{ x: 0, y: 2, w: 12, h: 3 }}
+                >
+                  <Card title='Transactions' bordered={false}>
+                    <Table
+                      columns={columns}
+                      dataSource={data}
+                      scroll={{ y: 250 }}
+                      pagination={false}
+                    />
+                  </Card>
+                  <h1 style={{ float: 'right', padding: '1vw' }}>
+                    Total Transactions: <span>{data.length}</span>
+                  </h1>
+                </div>
+              </ResponsiveGridLayout>
+            </Skeleton>
           </Content>
         </Layout>
       </Layout>
