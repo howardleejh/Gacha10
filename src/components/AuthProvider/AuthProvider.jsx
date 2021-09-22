@@ -8,6 +8,8 @@ export default function AuthProvider({ children }) {
   const { Moralis } = useMoralis()
 
   const [user, setUser] = useState(null)
+  const [metaUser, setMetaUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const notify = (message) => toast.dark(message)
 
@@ -15,33 +17,44 @@ export default function AuthProvider({ children }) {
     let isUser = null
 
     try {
-      isUser = await Moralis.User.currentAsync()
-    } catch (e) {
-      console.log(e)
+      isUser = await Moralis.User.current()
+    } catch (err) {
+      console.log(err)
+      return false
     }
-    if (!isUser) {
-      setUser(null)
-      return
+    if (isUser) {
+      setUser(isUser.attributes)
+      console.log('is user')
+      return true
     }
-    setUser(isUser.attributes)
-    return
+    setUser(null)
+    console.log('is not user')
+    return false
   }
 
   const metamaskAuth = async () => {
-    let userAuth = null
+    setIsLoading(true)
+    let metaUserAuth = null
 
     try {
-      userAuth = await Moralis.authenticate()
+      metaUserAuth = await Moralis.authenticate()
     } catch (err) {
+      console.log(err)
+    }
+    if (!metaUserAuth) {
+      setMetaUser(null)
       setUser(null)
-      notify('Please try to authenticate again')
+      notify('Please try again')
       return
     }
-    setUser(userAuth.attributes)
-    return
+    setMetaUser(metaUserAuth.attributes)
+    setIsLoading(false)
+    return metaUserAuth.attributes
   }
 
   const login = async (email, password) => {
+    setIsLoading(true)
+
     let userAuth = null
     try {
       userAuth = await Moralis.User.logIn(email, password)
@@ -49,8 +62,18 @@ export default function AuthProvider({ children }) {
       notify('Please check your login credentials')
       return false
     }
+    let metaUser = await metamaskAuth()
+
+    if (userAuth.attributes.ethAddress !== metaUser.ethAddress) {
+      logout()
+      setUser(null)
+      setMetaUser(null)
+      return notify('Your account and Metamask does not match')
+    }
     setUser(userAuth.attributes)
-    return true
+    setMetaUser(metaUser)
+    setIsLoading(false)
+    return
   }
 
   const logout = async () => {
@@ -60,12 +83,21 @@ export default function AuthProvider({ children }) {
       return console.log(err)
     }
     setUser(null)
+    setMetaUser(null)
     return
   }
 
   return (
     <AuthContext.Provider
-      value={{ userCheck, metamaskAuth, login, logout, user }}
+      value={{
+        userCheck,
+        metamaskAuth,
+        login,
+        logout,
+        user,
+        metaUser,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

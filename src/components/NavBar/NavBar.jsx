@@ -8,6 +8,7 @@ function NavBar() {
 
   const auth = useContext(AuthContext)
   const user = auth.user
+  const metaUser = auth.metaUser
 
   return (
     <Header
@@ -25,7 +26,7 @@ function NavBar() {
         <Col span={8} offset={8}>
           <Menu id='MenuBar' mode='horizontal'>
             <Menu.Item key='welcome'>
-              {user ? (
+              {user && user.email ? (
                 <Link to='/dashboard'>Welcome {user.username}</Link>
               ) : (
                 <></>
@@ -37,7 +38,7 @@ function NavBar() {
             <Menu.Item key='marketplace'>
               <Link to='/gacha/marketplace'>Marketplace</Link>
             </Menu.Item>
-            {!user ? (
+            {!user && !metaUser ? (
               <>
                 <Menu.Item key='register'>
                   <Link to='/register'>Register</Link>

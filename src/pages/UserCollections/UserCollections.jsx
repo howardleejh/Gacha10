@@ -46,7 +46,6 @@ function UserCollections() {
     })
 
     setCollections(resultsData)
-    console.log(resultsData)
     return
   }
 

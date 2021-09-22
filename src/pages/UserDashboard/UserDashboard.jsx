@@ -21,8 +21,6 @@ function UserDashboard() {
 
   const user = auth.user
 
-  console.log(user)
-
   const ResponsiveGridLayout = WidthProvider(Responsive)
   const { Content } = Layout
 

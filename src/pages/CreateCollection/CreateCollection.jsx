@@ -106,7 +106,7 @@ function CreateCollection() {
         collectionSlug: collectionName.trim().split(' ').join('-'),
       })
     } catch (err) {
-      console.log(err)
+      return console.log(err)
     }
     setIsLoading(false)
     return notify('Collection is successfully created!')

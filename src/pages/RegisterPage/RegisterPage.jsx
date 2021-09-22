@@ -21,6 +21,7 @@ import './RegisterPage.scss'
 
 function RegisterPage() {
   const { Moralis } = useMoralis()
+  let history = useHistory()
   const { Text } = Typography
   const { Step } = Steps
 
@@ -28,6 +29,8 @@ function RegisterPage() {
 
   const auth = useContext(AuthContext)
   const user = auth.user
+  const metaUser = auth.metaUser
+  const isLoading = auth.isLoading
 
   const { Panel } = Collapse
   const [form] = Form.useForm()
@@ -36,22 +39,19 @@ function RegisterPage() {
   const [btnDisabled, setBtnDisabled] = useState(false)
 
   async function CreateUser(username, email, confirmPass) {
-    let history = useHistory()
+    let tempUser = null
 
     try {
-      await Moralis.User.current()
+      tempUser = await Moralis.User.current()
     } catch (err) {
       return notify('User cannot be found')
     }
-    try {
-      user.set('username', username)
-      user.set('email', email)
-      user.set('password', confirmPass)
-    } catch (err) {
-      notify('create user failed')
-      return
-    }
-    user.save()
+
+    tempUser.set('username', username)
+    tempUser.set('email', email)
+    tempUser.set('password', confirmPass)
+    tempUser.save()
+
     history.push('/dashboard')
     return
   }
@@ -74,17 +74,12 @@ function RegisterPage() {
     if (activePanel === 3) {
       return
     } else if (activePanel === 2) {
-      if (!user) {
+      if (!user && !metaUser) {
         setBtnDisabled(true)
         return
       }
     }
     setActivePanel(activePanel + 1)
-  }
-
-  function MetaAuth() {
-    auth.metamaskAuth()
-    setBtnDisabled(false)
   }
 
   useEffect(() => {
@@ -185,10 +180,10 @@ function RegisterPage() {
                     <div style={{ textAlign: 'center' }}>
                       <Row justify='center'>
                         <Col span={12}>
-                          {user ? (
+                          {metaUser ? (
                             <div style={{ padding: '1vw' }}>
                               <h4>Your Metamask account is:</h4>
-                              <Text italic>{user.ethAddress}</Text>
+                              <Text italic>{metaUser.ethAddress}</Text>
                             </div>
                           ) : (
                             <h3 style={{ padding: '1vw' }}>
@@ -200,7 +195,22 @@ function RegisterPage() {
                       <Row justify='center'>
                         <Col span={12}>
                           <Space>
-                            <Button type='primary' onClick={MetaAuth}>
+                            <Button
+                              type='primary'
+                              onClick={async () => {
+                                let isMeta = null
+
+                                try {
+                                  isMeta = await auth.metamaskAuth()
+                                } catch (err) {
+                                  return console.log(err)
+                                }
+                                if (isMeta) {
+                                  setBtnDisabled(false)
+                                  return
+                                }
+                              }}
+                            >
                               Authenticate
                             </Button>
                           </Space>
@@ -232,69 +242,77 @@ function RegisterPage() {
                     <div style={{ textAlign: 'center' }}>
                       <Row>
                         <Col span={12} offset={4}>
-                          <Form
-                            form={form}
-                            id='register-form'
-                            name='registerForm'
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 16 }}
-                            initialValues={{ remember: true }}
-                            onFinish={onFinish}
-                          >
-                            <Form.Item
-                              label='Username'
-                              name='username'
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please provide your username!',
-                                },
-                              ]}
-                            >
-                              <Input />
-                            </Form.Item>
-                            <Form.Item
-                              label='Email'
-                              name='email'
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please provide your email!',
-                                },
-                              ]}
-                            >
-                              <Input />
-                            </Form.Item>
-                            <Form.Item
-                              label='Password'
-                              name='password'
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please provide your password!',
-                                },
-                              ]}
-                            >
-                              <Input.Password />
-                            </Form.Item>
-                            <Form.Item
-                              label='Confirm Password'
-                              name='confirmPass'
-                              rules={[
-                                {
-                                  required: true,
-                                  message: 'Please provide your password!',
-                                },
-                              ]}
-                            >
-                              <Input.Password />
-                            </Form.Item>
-                            <Form.Item style={{ float: 'right' }}>
-                              <Button type='primary' htmlType='submit'>
-                                Submit
-                              </Button>
-                            </Form.Item>
-                          </Form>
+                          {user && metaUser ? (
+                            <>
+                              <h1> Your registration is completed!</h1>
+                            </>
+                          ) : (
+                            <>
+                              <Form
+                                form={form}
+                                id='register-form'
+                                name='registerForm'
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 16 }}
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish}
+                              >
+                                <Form.Item
+                                  label='Username'
+                                  name='username'
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: 'Please provide your username!',
+                                    },
+                                  ]}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  label='Email'
+                                  name='email'
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: 'Please provide your email!',
+                                    },
+                                  ]}
+                                >
+                                  <Input />
+                                </Form.Item>
+                                <Form.Item
+                                  label='Password'
+                                  name='password'
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: 'Please provide your password!',
+                                    },
+                                  ]}
+                                >
+                                  <Input.Password />
+                                </Form.Item>
+                                <Form.Item
+                                  label='Confirm Password'
+                                  name='confirmPass'
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: 'Please provide your password!',
+                                    },
+                                  ]}
+                                >
+                                  <Input.Password />
+                                </Form.Item>
+                                <Form.Item style={{ float: 'right' }}>
+                                  <Button type='primary' htmlType='submit'>
+                                    Submit
+                                  </Button>
+                                </Form.Item>
+                              </Form>
+                            </>
+                          )}
                         </Col>
                       </Row>
                     </div>

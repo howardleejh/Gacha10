@@ -3,13 +3,13 @@ import { Route, Redirect } from 'react-router-dom'
 import { AuthContext } from '../AuthProvider/AuthProvider'
 
 const PrivateRoute = ({ component: Component, ...otherProps }) => {
-  const { user } = useContext(AuthContext)
+  const { user, metaUser } = useContext(AuthContext)
 
   return (
     <Route
       {...otherProps}
       render={(props) =>
-        user && user.email ? <Component {...props} /> : <Redirect to='/login' />
+        user && metaUser ? <Component {...props} /> : <Redirect to='/login' />
       }
     />
   )

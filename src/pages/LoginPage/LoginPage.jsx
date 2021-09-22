@@ -24,9 +24,11 @@ function LoginPage() {
     try {
       await auth.login(userDetails.email, userDetails.password)
     } catch (err) {
+      console.log(err)
       return notify('Unable to log in, please try again')
     }
     history.push('/dashboard')
+    return
   }
 
   useEffect(() => {
