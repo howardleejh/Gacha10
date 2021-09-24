@@ -1,7 +1,8 @@
 import { useContext } from 'react'
-import { Layout, Menu, Row, Col, Button } from 'antd'
+import { Layout, Menu, Row, Col, Button, Image } from 'antd'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../AuthProvider/AuthProvider'
+import './NavBar.scss'
 
 function NavBar() {
   const { Header } = Layout
@@ -19,8 +20,12 @@ function NavBar() {
       }}
     >
       <Row justify='space-between'>
-        <Col span={6}>
-          <Link to='/'>Logo</Link>
+        <Col span={4} style={{ width: '30vw', height: '10vh' }}>
+          <Link to='/'>
+            <Button type='link' ghost>
+              <img className='LogoIcon' width={30} src='/GachaIcon.svg' />
+            </Button>
+          </Link>
         </Col>
         <Col span={8} offset={8}>
           <Menu id='MenuBar' mode='horizontal'>

@@ -115,7 +115,9 @@ function App() {
                 </Switch>
               </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>footer test</Footer>
+            <Footer style={{ textAlign: 'center' }}>
+              Gacha10© All Rights Reserved.
+            </Footer>
           </Layout>
         </Router>
       </AuthProvider>

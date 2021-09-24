@@ -1,56 +1,42 @@
 import './CollectionItem.scss'
 import SideBar from '../../components/SideBar/SideBar'
-import ThreeFiber from '../../components/ThreeFiber/ThreeFiber'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
 import { useMoralis } from 'react-moralis'
 import { useState, useEffect, useContext } from 'react'
+import ThreeFiber from '../../components/ThreeFiber/ThreeFiber'
 import {
   Layout,
   Divider,
-  Button,
-  Space,
-  Card,
-  Col,
   Row,
-  Image,
-  Pagination,
+  Col,
+  Spin,
+  Descriptions,
   Skeleton,
+  Button,
 } from 'antd'
-import { Canvas, useLoader } from '@react-three/fiber'
-// import { OrbitControls } from '@react-three/drei'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Suspense } from 'react'
+import { useHistory } from 'react-router-dom'
+import { LoadingOutlined } from '@ant-design/icons'
 
 function CollectionItem() {
   const { Moralis } = useMoralis()
 
   let { collectionItem } = useParams()
 
-  const { Content } = Layout
+  let history = useHistory()
 
+  const { Content } = Layout
   const auth = useContext(AuthContext)
   const user = auth.user
-
-  console.log(collectionItem)
 
   const [isLoading, setIsLoading] = useState(false)
   const [item, setItem] = useState(null)
 
-  const Model = () => {
-    const gltf = useLoader(GLTFLoader, item.fileUrl)
-    return (
-      <>
-        <primitive object={gltf.scene} scale={1} />
-      </>
-    )
-  }
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
   useEffect(() => {
     setIsLoading(true)
     const findOneItem = async () => {
-      setIsLoading(true)
-
       const UserUploads = Moralis.Object.extend('UserUploads')
       const query = new Moralis.Query(UserUploads)
       query.equalTo('fileName', collectionItem)
@@ -64,10 +50,10 @@ function CollectionItem() {
       } catch (err) {
         return console.log(err)
       }
+      console.log(results.attributes)
       return setItem(results.attributes)
     }
     findOneItem()
-    console.log(item.fileUrl)
     setIsLoading(false)
   }, [])
 
@@ -78,16 +64,78 @@ function CollectionItem() {
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content style={{ overflow: 'initial' }}>
             <Divider loading={isLoading} orientation='left'>
-              {item.source.file.name}
+              {item ? item.source.file.name : ''}
             </Divider>
-            <Canvas>
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[100, 50, 35]} />
-              <Suspense fallback={null}>
-                <Model />
-                {/* <OrbitControls /> */}
-              </Suspense>
-            </Canvas>
+            <Row>
+              <Col
+                span={10}
+                style={{ height: '75vh', border: '1px solid black' }}
+              >
+                {!item ? (
+                  <>
+                    <Spin indicator={antIcon} />
+                  </>
+                ) : (
+                  <>
+                    <ThreeFiber
+                      item={item.fileUrl}
+                      autoRotate={true}
+                      zoom={true}
+                    />
+                  </>
+                )}
+              </Col>
+              <Col
+                span={10}
+                offset={1}
+                style={{
+                  height: '75vh',
+                  border: '1px solid black',
+                }}
+              >
+                <Descriptions
+                  title='Item Info'
+                  layout='vertical'
+                  bordered
+                  justify='center'
+                  style={{ paddingTop: '5vh' }}
+                >
+                  {!item ? (
+                    <Skeleton active loading={isLoading} />
+                  ) : (
+                    <>
+                      <Descriptions.Item label='Product'>
+                        {'' || item.source.file.name}
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Size'>
+                        {'' || item.source.file.size}
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Minted?'>
+                        {'' || item.minted}
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Collection' span={2}>
+                        {'' || item.collectionName}
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Owner' span={3}>
+                        {'' || item.owner}
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Value'>
+                        ETH 7.00
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Quantity'>
+                        6345
+                      </Descriptions.Item>
+                      <Descriptions.Item label='Rarity'>Rare</Descriptions.Item>
+                      <Descriptions.Item>
+                        <Button type='primary' onClick={() => history.goBack()}>
+                          Back to Collection
+                        </Button>
+                      </Descriptions.Item>
+                    </>
+                  )}
+                </Descriptions>
+              </Col>
+            </Row>
           </Content>
         </Layout>
       </Layout>

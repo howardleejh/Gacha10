@@ -2,12 +2,15 @@ import { Row, Col, Form, Input, Button, Select, Upload, Layout } from 'antd'
 import SideBar from '../../components/SideBar/SideBar'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import './CreateStore.scss'
 
 function CreateStore() {
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   }
+
+  let history = useHistory()
 
   const [form] = Form.useForm()
 
@@ -94,10 +97,7 @@ function CreateStore() {
                     <Button type='primary' htmlType='submit'>
                       Create
                     </Button>
-                    <Button
-                      htmlType='button'
-                      onClick={() => console.log('go back to previous page')}
-                    >
+                    <Button htmlType='button' onClick={() => history.goBack()}>
                       Cancel
                     </Button>
                   </Form.Item>

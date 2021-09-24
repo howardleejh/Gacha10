@@ -12,17 +12,26 @@ import {
   Table,
   Divider,
   Skeleton,
+  Spin,
 } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import { Pie, Column } from '@ant-design/charts'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
+import { useMoralis } from 'react-moralis'
 import './UserDashboard.scss'
 
 function UserDashboard() {
+  const { Moralis } = useMoralis()
+
   const auth = useContext(AuthContext)
 
   const user = auth.user
 
   const [isLoading, setIsLoading] = useState(false)
+  const [transactions, setTransactions] = useState([])
+  const [balance, setBalance] = useState(0)
+  const [collectionCount, setCollectionCount] = useState(0)
+  const [storeCount, setStoreCount] = useState(0)
 
   const ResponsiveGridLayout = WidthProvider(Responsive)
   const { Content } = Layout
@@ -66,7 +75,9 @@ function UserDashboard() {
         },
         style: {
           fontSize: 14,
-          textAlign: 'left',
+          textAlign: 'center',
+          width: '100%',
+          height: '90%',
         },
       },
       interactions: [{ type: 'element-active' }],
@@ -128,6 +139,11 @@ function UserDashboard() {
           autoRotate: false,
         },
       },
+      style: {
+        paddingTop: '5%',
+        width: '100%',
+        height: '90%',
+      },
     }
     return <Column {...config} />
   }
@@ -135,33 +151,135 @@ function UserDashboard() {
   // Table showing all Blockchain Transactions
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: 'Block',
+      dataIndex: 'block',
+      width: 120,
+    },
+    {
+      title: 'Hash',
+      dataIndex: 'hash',
+      width: 120,
+    },
+    {
+      title: 'From',
+      dataIndex: 'sent',
+    },
+    {
+      title: 'To',
+      dataIndex: 'received',
+    },
+    {
+      title: 'Gas Price (ETH)',
+      dataIndex: 'gas',
       width: 150,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
+      title: 'Value',
+      dataIndex: 'value',
       width: 150,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'Timestamp',
+      dataIndex: 'timestamp',
+      width: 150,
     },
   ]
 
   const data = []
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < transactions.length; i++) {
     data.push({
       key: i,
-      name: `Edward King ${i}`,
-      age: 32,
-      address: `London, Park Lane no. ${i}`,
+      block: transactions[i].block_number,
+      hash: (
+        <Popover content={transactions[i].hash} trigger='hover'>
+          <Button>Hash</Button>
+        </Popover>
+      ),
+      sent: transactions[i].from_address,
+      received: transactions[i].to_address,
+      gas: parseFloat(transactions[i].gas_price / Math.pow(10, 18)).toFixed(10),
+      value: parseFloat(transactions[i].value / Math.pow(10, 18)).toFixed(2),
+      timestamp: transactions[i].block_timestamp,
     })
   }
 
+  const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+
   useEffect(() => {
-    console.log(user)
+    setIsLoading(true)
+    const options = {
+      chain: 'ropsten',
+      address: user.ethAddress,
+      order: 'desc',
+      from_block: '0',
+    }
+
+    const findTransactions = async () => {
+      let transactions = null
+
+      try {
+        transactions = await Moralis.Web3API.account.getTransactions(options)
+      } catch (err) {
+        return console.log(err)
+      }
+
+      if (transactions.result.length === 0) {
+        return console.log('no transactions yet')
+      }
+
+      let results = transactions.result
+
+      console.log(transactions.result[0])
+      setTransactions(results)
+      return
+    }
+
+    const findBalance = async () => {
+      let balance = null
+      try {
+        balance = await Moralis.Web3API.account.getNativeBalance(options)
+      } catch (err) {
+        return console.log(err)
+      }
+      return setBalance(
+        parseFloat(balance.balance / Math.pow(10, 18)).toFixed(2)
+      )
+    }
+
+    const findCollections = async () => {
+      const UserCollections = Moralis.Object.extend('UserCollections')
+      const query = new Moralis.Query(UserCollections)
+      query.equalTo('owner_email', user.email)
+
+      let results = null
+
+      try {
+        results = await query.count()
+      } catch (err) {
+        return console.log(err)
+      }
+      return setCollectionCount(results)
+    }
+    const findStores = async () => {
+      // const UserCollections = Moralis.Object.extend('UserCollections')
+      // const query = new Moralis.Query(UserCollections)
+      // query.equalTo('owner_email', user.email)
+
+      // let results = null
+
+      // try {
+      //   results = await query.count()
+      // } catch (err) {
+      //   return console.log(err)
+      // }
+      // return setCollectionCount(results)
+      return
+    }
+
+    findTransactions()
+    findCollections()
+    findBalance()
+    setIsLoading(false)
   }, [])
 
   return (
@@ -188,7 +306,7 @@ function UserDashboard() {
                 }}
               >
                 <div
-                  className='testbox'
+                  className='stat-box'
                   key='1'
                   data-grid={{
                     x: 0,
@@ -197,63 +315,84 @@ function UserDashboard() {
                     h: 2,
                   }}
                 >
-                  <Card title='USER DETAILS' bordered={false}>
-                    <Row gutter={16}>
-                      <Col span={12}>
-                        <Statistic title='Username' value={user.username} />
-                      </Col>
-                      <Col span={12}>
-                        <Statistic
-                          title='Account Balance (Eth)'
-                          value={112893}
-                          precision={2}
-                        />
-                      </Col>
-                    </Row>
-                    <Row gutter={16}>
-                      <Col span={12}>
-                        <Statistic title='Colections' value={112893} />
-                      </Col>
-                      <Col span={12}>
-                        <Statistic title='Stores' value={112893} />
-                      </Col>
-                    </Row>
-                    <Popover content={user.ethAddress} trigger='hover'>
-                      <Button style={{ marginTop: '3vh', float: 'right' }}>
-                        Wallet
-                      </Button>
-                    </Popover>
+                  <Card
+                    style={{ background: 'transparent' }}
+                    title='USER DETAILS'
+                    bordered={false}
+                    loading={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Spin indicator={antIcon} spinning={true} />
+                      </>
+                    ) : (
+                      <>
+                        <Row gutter={16}>
+                          <Col span={12}>
+                            <Statistic title='Username' value={user.username} />
+                          </Col>
+                          <Col span={12}>
+                            <Statistic
+                              title='Account Balance (ETH)'
+                              value={balance}
+                            />
+                          </Col>
+                        </Row>
+                        <Row gutter={16}>
+                          <Col span={12}>
+                            <Statistic
+                              title='Colections'
+                              value={collectionCount}
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <Statistic title='Stores' value={storeCount} />
+                          </Col>
+                        </Row>
+                        <Popover content={user.ethAddress} trigger='hover'>
+                          <Button style={{ marginTop: '3vh', float: 'right' }}>
+                            Wallet
+                          </Button>
+                        </Popover>
+                      </>
+                    )}
                   </Card>
                 </div>
                 <div
-                  className='testbox'
+                  className='stat-box'
                   key='2'
                   data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
                   style={{ padding: '2vh 4vw 0 0' }}
                 >
-                  <StoreProfits />
+                  <StoreProfits loading={isLoading} />
                 </div>
                 <div
-                  className='testbox'
+                  className='stat-box'
                   key='3'
                   data-grid={{ x: 8, y: 0, w: 4, h: 2 }}
                 >
-                  <FavoriteCollection />
+                  <FavoriteCollection loading={isLoading} />
                 </div>
                 <div
-                  className='testbox'
+                  className='stat-box'
                   key='4'
                   data-grid={{ x: 0, y: 2, w: 12, h: 3 }}
                 >
-                  <Card title='Transactions' bordered={false}>
+                  <Card
+                    title='Transactions'
+                    bordered={false}
+                    style={{ background: 'transparent' }}
+                  >
                     <Table
+                      style={{ background: 'transparent' }}
                       columns={columns}
                       dataSource={data}
-                      scroll={{ y: 250 }}
+                      scroll={{ y: 240 }}
                       pagination={false}
+                      loading={isLoading}
                     />
                   </Card>
-                  <h1 style={{ float: 'right', padding: '1vw' }}>
+                  <h1 style={{ float: 'right', padding: '.5vw' }}>
                     Total Transactions: <span>{data.length}</span>
                   </h1>
                 </div>

@@ -1,26 +1,49 @@
+import React, { Suspense } from 'react'
 import { Canvas, useLoader } from '@react-three/fiber'
-// import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, ContactShadows, Environment } from '@react-three/drei'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Suspense } from 'react'
 
-const Model = (props) => {
-  const gltf = useLoader(GLTFLoader, `${props.item}`)
-  return (
-    <>
-      <primitive object={gltf.scene} scale={1} />
-    </>
-  )
-}
+export default function ThreeFiber(props) {
+  const Model = () => {
+    const gltf = useLoader(GLTFLoader, props.item)
+    return (
+      <>
+        <primitive object={gltf.scene} scale={0.7} />
+      </>
+    )
+  }
 
-export default function ThreeFiber() {
   return (
-    <Canvas>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[100, 50, 35]} />
+    <Canvas dpr={[2, 2]} camera={{ position: [0, 0, 4], fov: 50 }}>
+      <ambientLight intensity={1} />
+      {/* <fog attach='fog' args={['white', -6, 40]} /> */}
+      <spotLight intensity={1} angle={0.1} penumbra={1} position={[5, 2, 10]} />
+      <spotLight
+        intensity={1}
+        angle={0.1}
+        penumbra={1}
+        position={[5, 2, -10]}
+      />
       <Suspense fallback={null}>
         <Model />
-        {/* <OrbitControls /> */}
+        <Environment preset='studio' />
+        <ContactShadows
+          rotation-x={Math.PI / 2}
+          position={[0, -0.65, 0]}
+          opacity={1}
+          width={5}
+          height={5}
+          blur={3}
+          far={1.1}
+        />
       </Suspense>
+      <OrbitControls
+        autoRotate={props.autoRotate}
+        enablePan={props.pan}
+        enableZoom={props.zoom}
+        minPolarAngle={Math.PI / 2.3}
+        maxPolarAngle={Math.PI / 2.3}
+      />
     </Canvas>
   )
 }
