@@ -8,7 +8,6 @@ function NavBar() {
 
   const auth = useContext(AuthContext)
   const user = auth.user
-  const metaUser = auth.metaUser
 
   return (
     <Header

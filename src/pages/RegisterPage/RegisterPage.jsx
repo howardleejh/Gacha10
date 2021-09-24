@@ -28,9 +28,7 @@ function RegisterPage() {
   const notify = (message) => toast.dark(message)
 
   const auth = useContext(AuthContext)
-  const user = auth.user
   const metaUser = auth.metaUser
-  const isLoading = auth.isLoading
 
   const { Panel } = Collapse
   const [form] = Form.useForm()

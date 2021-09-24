@@ -52,7 +52,7 @@ export default function AuthProvider({ children }) {
     let metaAuth = null
 
     try {
-      metaAuth = await Moralis.authenticate()
+      metaAuth = await Moralis.authenticate({ message: 'Welcome to Gacha10' })
     } catch (err) {
       return console.log(err)
     }

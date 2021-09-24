@@ -1,8 +1,6 @@
-import './UserUploads.scss'
 import SideBar from '../../components/SideBar/SideBar'
 import { useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
-import { useMoralis } from 'react-moralis'
 import {
   Layout,
   Divider,
@@ -13,35 +11,39 @@ import {
   Row,
   Image,
   Pagination,
-  Select,
   Skeleton,
 } from 'antd'
+import { Link, useParams } from 'react-router-dom'
+import { useMoralis } from 'react-moralis'
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 
-function UserUploads() {
-  const { Content } = Layout
+function SingleCollection() {
   const { Moralis } = useMoralis()
+
+  const { Content } = Layout
+  const { Meta } = Card
+
+  const [collectionItems, setCollectionItems] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const auth = useContext(AuthContext)
   const user = auth.user
 
-  const [uploads, setUploads] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const { collection } = useParams()
 
-  const { Meta } = Card
+  let paramsName = collection.split('-').join(' ')
 
-  const { Option } = Select
-
-  function handleChange(value) {
-    console.log(`selected ${value}`)
-  }
+  console.log(collection.split('-').join(' '))
 
   useEffect(() => {
-    const findUserUploads = async () => {
+    const findCollectionItems = async () => {
       setIsLoading(true)
+
       const UserUploads = Moralis.Object.extend('UserUploads')
       const query = new Moralis.Query(UserUploads)
+      query.equalTo('collectionName', paramsName)
       query.equalTo('owner_email', user.email)
+      query.notEqualTo('isCollectionImg', true)
 
       let results = null
 
@@ -55,14 +57,12 @@ function UserUploads() {
       results.forEach((item) => {
         resultsData.push(item.attributes)
       })
-
-      setUploads(resultsData)
-      console.log(resultsData)
+      console.log(resultsData[0])
+      setCollectionItems(resultsData)
       setIsLoading(false)
       return
     }
-
-    findUserUploads()
+    findCollectionItems()
   }, [])
 
   return (
@@ -71,37 +71,17 @@ function UserUploads() {
         <SideBar />
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content style={{ overflow: 'initial' }}>
-            <Divider orientation='left'>Uploads</Divider>
+            <Divider orientation='left'>Collection Items</Divider>
             <Skeleton active loading={isLoading}>
-              {uploads ? (
+              {collectionItems ? (
                 <>
-                  <Row style={{ marginBottom: '2vh' }}>
-                    <Col>
-                      <p>
-                        Filter Collections:
-                        <span style={{ paddingLeft: '1vw' }}>
-                          <Select
-                            defaultValue='lucy'
-                            style={{ width: 120 }}
-                            onChange={handleChange}
-                          >
-                            {uploads.map((item) => (
-                              <Option value={item.collectionName}>
-                                {item.collectionName}
-                              </Option>
-                            ))}
-                          </Select>
-                        </span>
-                      </p>
-                    </Col>
-                  </Row>
                   <Space
                     size={[50, 50]}
                     wrap
                     direction='horizontal'
                     style={{ width: '100%' }}
                   >
-                    {uploads.map((item) => (
+                    {collectionItems.map((item) => (
                       <Card
                         hoverable
                         loading={isLoading}
@@ -129,12 +109,6 @@ function UserUploads() {
                                   ) : (
                                     <CloseCircleTwoTone twoToneColor='#DC143C' />
                                   )}
-                                  Collection Image:
-                                  {item.isCollectionImg ? (
-                                    <CheckCircleTwoTone twoToneColor='#52c41a' />
-                                  ) : (
-                                    <CloseCircleTwoTone twoToneColor='#DC143C' />
-                                  )}
                                 </Space>
                               </p>
                             </>
@@ -142,7 +116,13 @@ function UserUploads() {
                         />
                         <Row justify='center' style={{ paddingTop: '2vh' }}>
                           <Col>
-                            <Button type='primary'>Mint this item!</Button>
+                            <Button type='primary'>
+                              <Link
+                                to={`/collections/${collection}/${item.fileName}`}
+                              >
+                                Go to Item
+                              </Link>
+                            </Button>
                           </Col>
                         </Row>
                       </Card>
@@ -152,7 +132,7 @@ function UserUploads() {
                     <Col>
                       <Pagination
                         defaultPageSize={3}
-                        total={uploads.length}
+                        total={collectionItems.length}
                         hideOnSinglePage={true}
                         style={{ marginTop: '2vh' }}
                       />
@@ -161,7 +141,7 @@ function UserUploads() {
                 </>
               ) : (
                 <>
-                  <h1>There is currently no uploads available</h1>
+                  <h1>There is currently no collectionItems available</h1>
                 </>
               )}
             </Skeleton>
@@ -172,4 +152,4 @@ function UserUploads() {
   )
 }
 
-export default UserUploads
+export default SingleCollection

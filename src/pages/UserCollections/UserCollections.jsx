@@ -27,36 +27,34 @@ function UserCollections() {
 
   const [collections, setCollections] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const findUserCollections = async () => {
-    setIsLoading(true)
-    const UserCollections = Moralis.Object.extend('UserCollections')
-    const query = new Moralis.Query(UserCollections)
-
-    let results = null
-
-    try {
-      results = await query.findAll()
-    } catch (err) {
-      return console.log(err)
-    }
-    let resultsData = []
-
-    results.forEach((item) => {
-      resultsData.push(item.attributes)
-    })
-
-    setCollections(resultsData)
-    setIsLoading(false)
-    return
-  }
 
   const { Content } = Layout
 
-  const style = { background: '#0092ff', padding: '8px 0' }
-
   useEffect(() => {
+    const findUserCollections = async () => {
+      setIsLoading(true)
+      const UserCollections = Moralis.Object.extend('UserCollections')
+      const query = new Moralis.Query(UserCollections)
+      query.equalTo('owner_email', user.email)
+
+      let results = null
+
+      try {
+        results = await query.findAll()
+      } catch (err) {
+        return console.log(err)
+      }
+      let resultsData = []
+
+      results.forEach((item) => {
+        resultsData.push(item.attributes)
+      })
+
+      setCollections(resultsData)
+      setIsLoading(false)
+      return
+    }
+
     findUserCollections()
   }, [])
 

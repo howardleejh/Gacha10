@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import SideBar from '../../components/SideBar/SideBar'
 import {
@@ -159,6 +159,10 @@ function UserDashboard() {
       address: `London, Park Lane no. ${i}`,
     })
   }
+
+  useEffect(() => {
+    console.log(user)
+  }, [])
 
   return (
     <>

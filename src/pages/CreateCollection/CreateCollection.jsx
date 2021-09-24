@@ -46,6 +46,7 @@ function CreateCollection() {
     // trying to upload file to moralis servers
     try {
       resp = await fileUpload.save()
+      console.log(resp)
     } catch (err) {
       notify('Upload to server failed.')
     }
@@ -54,6 +55,7 @@ function CreateCollection() {
     const userUpload = new UserUpload()
     try {
       await userUpload.save({
+        id: resp.id,
         owner: user.username,
         owner_email: user.email,
         collectionName: collectionName,

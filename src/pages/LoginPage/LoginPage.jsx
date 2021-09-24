@@ -10,8 +10,6 @@ function LoginPage() {
   let history = useHistory()
 
   const auth = useContext(AuthContext)
-  const user = auth.user
-  const metaUser = auth.metaUser
 
   const [form] = Form.useForm()
 

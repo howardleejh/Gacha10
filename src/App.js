@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage/LoginPage'
 import RegisterPage from './pages/RegisterPage/RegisterPage'
 import HomePage from './pages/HomePage/HomePage'
 import ErrorPage from './pages/ErrorPage/ErrorPage'
-import NftItem from './pages/NftItem/NftItem'
+import CollectionItem from './pages/CollectionItem/CollectionItem'
 import UserDashboard from './pages/UserDashboard/UserDashboard'
 import UserCollections from './pages/UserCollections/UserCollections'
 import UserStores from './pages/UserStores/UserStores'
@@ -18,7 +18,7 @@ import UserUploads from './pages/UserUploads/UserUploads'
 import CreatePage from './pages/CreatePage/CreatePage'
 import CreateCollection from './pages/CreateCollection/CreateCollection'
 import CreateStore from './pages/CreateStore/CreateStore'
-import CollectionItem from './pages/CollectionItem/CollectionItem'
+import SingleCollection from './pages/SingleCollection/SingleCollection'
 import UserTransfers from './pages/UserTransfers/UserTransfers'
 import './App.scss'
 
@@ -42,13 +42,18 @@ function App() {
                 <Switch>
                   <PrivateRoute
                     exact
+                    path='/collections/:collection/:collectionItem'
+                    component={CollectionItem}
+                  ></PrivateRoute>
+                  <PrivateRoute
+                    exact
                     path='/transfer'
                     component={UserTransfers}
                   ></PrivateRoute>
                   <PrivateRoute
                     exact
-                    path='/collections/:collectionName'
-                    component={CollectionItem}
+                    path='/collections/:collection'
+                    component={SingleCollection}
                   ></PrivateRoute>
                   <PrivateRoute
                     exact
@@ -85,7 +90,6 @@ function App() {
                     path='/dashboard'
                     component={UserDashboard}
                   ></PrivateRoute>
-                  <Route exact path='/nft/:id' component={NftItem}></Route>
                   <GuestOnlyRoute
                     exact
                     path='/login'

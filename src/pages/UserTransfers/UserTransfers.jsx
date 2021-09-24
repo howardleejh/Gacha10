@@ -32,29 +32,6 @@ function UserTransfers() {
   const [modalMessage, setModalMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const findBalance = async () => {
-    setIsLoading(true)
-
-    let balance = null
-
-    const options = {
-      chain: 'ropsten',
-      address: user.ethAddress,
-      order: 'desc',
-      from_block: '0',
-    }
-    try {
-      balance = await Moralis.Web3API.account.getNativeBalance(options)
-    } catch (err) {
-      return console.log(err)
-    }
-    let balanceAmt = parseFloat(balance.balance / Math.pow(10, 18)).toFixed(2)
-
-    setUserBalance(balanceAmt)
-    setIsLoading(false)
-    return
-  }
-
   const onFinish = async (values) => {
     setIsLoading(true)
 
@@ -64,10 +41,8 @@ function UserTransfers() {
       receiver: values.ethAdd,
     }
 
-    let results = null
-
     try {
-      results = await Moralis.transfer(options)
+      await Moralis.transfer(options)
     } catch (err) {
       setModalMessage(err)
       return
@@ -92,6 +67,29 @@ function UserTransfers() {
   }
 
   useEffect(() => {
+    const findBalance = async () => {
+      setIsLoading(true)
+
+      let balance = null
+
+      const options = {
+        chain: 'ropsten',
+        address: user.ethAddress,
+        order: 'desc',
+        from_block: '0',
+      }
+      try {
+        balance = await Moralis.Web3API.account.getNativeBalance(options)
+      } catch (err) {
+        return console.log(err)
+      }
+      let balanceAmt = parseFloat(balance.balance / Math.pow(10, 18)).toFixed(2)
+
+      setUserBalance(balanceAmt)
+      setIsLoading(false)
+      return
+    }
+
     findBalance()
   }, [userBalance])
 
