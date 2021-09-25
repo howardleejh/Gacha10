@@ -1,4 +1,14 @@
-import { Row, Col, Form, Input, Button, Select, Upload, Layout } from 'antd'
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  Select,
+  Upload,
+  Layout,
+  Divider,
+} from 'antd'
 import SideBar from '../../components/SideBar/SideBar'
 import { UploadOutlined } from '@ant-design/icons'
 import { useState } from 'react'
@@ -40,6 +50,7 @@ function CreateStore() {
         <SideBar />
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content style={{ overflow: 'initial' }}>
+            <Divider orientation='left'>Create a Store</Divider>
             <Row justify='center'>
               <Col span={24}>
                 <Form

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Layout, Menu, Row, Col, Button, Image } from 'antd'
+import { Layout, Menu, Row, Col, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../AuthProvider/AuthProvider'
 import './NavBar.scss'
@@ -23,7 +23,12 @@ function NavBar() {
         <Col span={4} style={{ width: '30vw', height: '10vh' }}>
           <Link to='/'>
             <Button type='link' ghost>
-              <img className='LogoIcon' width={30} src='/GachaIcon.svg' />
+              <img
+                className='LogoIcon'
+                width={30}
+                src='/GachaIcon.svg'
+                alt='Logo'
+              />
             </Button>
           </Link>
         </Col>

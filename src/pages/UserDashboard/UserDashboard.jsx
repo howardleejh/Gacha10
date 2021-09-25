@@ -27,7 +27,7 @@ function UserDashboard() {
 
   const user = auth.user
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [transactions, setTransactions] = useState([])
   const [balance, setBalance] = useState(0)
   const [collectionCount, setCollectionCount] = useState(0)
@@ -206,7 +206,6 @@ function UserDashboard() {
   const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
   useEffect(() => {
-    setIsLoading(true)
     const options = {
       chain: 'ropsten',
       address: user.ethAddress,
@@ -260,21 +259,21 @@ function UserDashboard() {
       }
       return setCollectionCount(results)
     }
-    const findStores = async () => {
-      // const UserCollections = Moralis.Object.extend('UserCollections')
-      // const query = new Moralis.Query(UserCollections)
-      // query.equalTo('owner_email', user.email)
+    // const findStores = async () => {
+    // const UserCollections = Moralis.Object.extend('UserCollections')
+    // const query = new Moralis.Query(UserCollections)
+    // query.equalTo('owner_email', user.email)
 
-      // let results = null
+    // let results = null
 
-      // try {
-      //   results = await query.count()
-      // } catch (err) {
-      //   return console.log(err)
-      // }
-      // return setCollectionCount(results)
-      return
-    }
+    // try {
+    //   results = await query.count()
+    // } catch (err) {
+    //   return console.log(err)
+    // }
+    // return setCollectionCount(results)
+    //   return
+    // }
 
     findTransactions()
     findCollections()
@@ -364,14 +363,22 @@ function UserDashboard() {
                   data-grid={{ x: 4, y: 0, w: 4, h: 2 }}
                   style={{ padding: '2vh 4vw 0 0' }}
                 >
-                  <StoreProfits loading={isLoading} />
+                  {isLoading ? (
+                    <Spin indicator={antIcon} spinning={isLoading} />
+                  ) : (
+                    <StoreProfits />
+                  )}
                 </div>
                 <div
                   className='stat-box'
                   key='3'
                   data-grid={{ x: 8, y: 0, w: 4, h: 2 }}
                 >
-                  <FavoriteCollection loading={isLoading} />
+                  {isLoading ? (
+                    <Spin indicator={antIcon} spinning={isLoading} />
+                  ) : (
+                    <FavoriteCollection />
+                  )}
                 </div>
                 <div
                   className='stat-box'

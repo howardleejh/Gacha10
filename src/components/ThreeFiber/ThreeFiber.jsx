@@ -14,16 +14,7 @@ export default function ThreeFiber(props) {
   }
 
   return (
-    <Canvas dpr={[2, 2]} camera={{ position: [0, 0, 4], fov: 50 }}>
-      <ambientLight intensity={1} />
-      {/* <fog attach='fog' args={['white', -6, 40]} /> */}
-      <spotLight intensity={1} angle={0.1} penumbra={1} position={[5, 2, 10]} />
-      <spotLight
-        intensity={1}
-        angle={0.1}
-        penumbra={1}
-        position={[5, 2, -10]}
-      />
+    <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 4], fov: 50 }}>
       <Suspense fallback={null}>
         <Model />
         <Environment preset='studio' />

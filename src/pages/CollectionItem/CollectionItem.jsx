@@ -1,9 +1,8 @@
 import './CollectionItem.scss'
 import SideBar from '../../components/SideBar/SideBar'
 import { useParams } from 'react-router-dom'
-import { AuthContext } from '../../components/AuthProvider/AuthProvider'
 import { useMoralis } from 'react-moralis'
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import ThreeFiber from '../../components/ThreeFiber/ThreeFiber'
 import {
   Layout,
@@ -26,8 +25,6 @@ function CollectionItem() {
   let history = useHistory()
 
   const { Content } = Layout
-  const auth = useContext(AuthContext)
-  const user = auth.user
 
   const [isLoading, setIsLoading] = useState(false)
   const [item, setItem] = useState(null)
@@ -67,10 +64,7 @@ function CollectionItem() {
               {item ? item.source.file.name : ''}
             </Divider>
             <Row>
-              <Col
-                span={10}
-                style={{ height: '75vh', border: '1px solid black' }}
-              >
+              <Col span={10} className='item-container'>
                 {!item ? (
                   <>
                     <Spin indicator={antIcon} />
@@ -85,19 +79,13 @@ function CollectionItem() {
                   </>
                 )}
               </Col>
-              <Col
-                span={10}
-                offset={1}
-                style={{
-                  height: '75vh',
-                  border: '1px solid black',
-                }}
-              >
+              <Col span={10} offset={1}>
                 <Descriptions
                   title='Item Info'
                   layout='vertical'
                   bordered
                   justify='center'
+                  className='item-container'
                   style={{ paddingTop: '5vh' }}
                 >
                   {!item ? (

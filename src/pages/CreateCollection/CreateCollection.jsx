@@ -1,4 +1,4 @@
-import { Row, Col, Form, Input, Button, Upload, Layout } from 'antd'
+import { Row, Col, Form, Input, Button, Upload, Layout, Divider } from 'antd'
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
 import { useMoralis } from 'react-moralis'
 import { AuthContext } from '../../components/AuthProvider/AuthProvider'
@@ -127,6 +127,7 @@ function CreateCollection() {
         <SideBar />
         <Layout className='site-layout' style={{ marginLeft: 200 }}>
           <Content style={{ overflow: 'initial' }}>
+            <Divider orientation='left'>Create a Collection</Divider>
             <Row justify='center'>
               <Col span={24}>
                 <Form
@@ -208,6 +209,16 @@ function CreateCollection() {
                     </Button>
                   </Form.Item>
                 </Form>
+                <p>
+                  Note: Only GLB files work at the moment.
+                  <Button
+                    type='link'
+                    href='https://sbtron.github.io/makeglb/'
+                    target='_blank'
+                  >
+                    Click Here
+                  </Button>
+                </p>
               </Col>
             </Row>
           </Content>
