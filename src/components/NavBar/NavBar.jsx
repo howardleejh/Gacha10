@@ -16,7 +16,9 @@ function NavBar() {
         position: 'fixed',
         zIndex: 1,
         width: '100%',
-        background: 'white',
+        background: 'rgba(255, 255, 255, 0.7)',
+        className: 'navbar',
+        boxShadow: '5px 5px 1px (0, 0, 0, 1)',
       }}
     >
       <Row justify='space-between'>
@@ -25,7 +27,7 @@ function NavBar() {
             <Button type='link' ghost>
               <img
                 className='LogoIcon'
-                width={30}
+                width={25}
                 src='/GachaIcon.svg'
                 alt='Logo'
               />
@@ -33,7 +35,14 @@ function NavBar() {
           </Link>
         </Col>
         <Col span={8} offset={8}>
-          <Menu id='MenuBar' mode='horizontal'>
+          <Menu
+            id='MenuBar'
+            mode='horizontal'
+            style={{
+              background: 'rgba(0, 0, 0, 0)',
+              border: '0',
+            }}
+          >
             <Menu.Item key='welcome'>
               {user && user.email ? (
                 <Link to='/dashboard'>Welcome {user.username}</Link>
